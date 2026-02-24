@@ -1,0 +1,35 @@
+# Gradle files
+.gradle/
+build/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Log/OS Files
+*.log
+
+# Android Studio generated files and folders
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.ap_
+*.aab
+*.aar
+
+# IntelliJ
+.idea/
+.DS_Store
+out/
+*.iml
+*.iws
+*.ipr
+
+# The Android Open Source Project build system does not use Gradle by default anymore in
+# recent versions of Android Studio, but still uses it in older versions and to build independent
+# gradle wrapper projects.
+# The actual properties of the displays are unknown.
+# Because we want to keep the wrapper properties in the repository (to be able to build the project)
+# we should keep it.
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
