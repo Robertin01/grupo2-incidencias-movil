@@ -1,39 +1,50 @@
-package com.ejemplo.incidencias.ui.navigation
+package com.incidenciasclase.navigation
 
-import android.content.Context
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.ejemplo.incidencias.data.repository.IncidenciaRepository
-import com.ejemplo.incidencias.ui.screens.RegistroIncidenciaScreen
-import com.ejemplo.incidencias.ui.screens.VerIncidenciasScreen
-import com.ejemplo.incidencias.ui.viewmodel.IncidenciaViewModel
+import androidx.navigation.compose.rememberNavController
+import com.incidenciasclase.data.IncidenciaDatabase
+import com.incidenciasclase.ui.login.LoginScreen
+import com.incidenciasclase.ui.login.LoginViewModel
+import com.incidenciasclase.ui.registrar.RegistrarIncidenciaScreen
+import com.incidenciasclase.ui.registrar.RegistrarIncidenciaViewModel
+import com.incidenciasclase.verincidencias.VerIncidencias
 
 @Composable
-fun AppNavigation(navController: NavHostController, context: Context) {
-    val repository = IncidenciaRepository()
-    val viewModel = IncidenciaViewModel(repository)
+fun AppNavHost() {
+    val navController = rememberNavController()
+    val context = LocalContext.current
+    val dao = IncidenciaDatabase.get(context).dao()
+    val registrarViewModel = RegistrarIncidenciaViewModel(dao)
+    val loginViewModel: LoginViewModel = viewModel()
 
     NavHost(
         navController = navController,
-        startDestination = Screen.RegistroIncidencia.route
+        startDestination = "login"
     ) {
-        composable(Screen.RegistroIncidencia.route) {
-            RegistroIncidenciaScreen(
-                viewModel = viewModel,
-                onNavigateToVerIncidencias = {
-                    navController.navigate(Screen.VerIncidencias.route)
+        composable("login") {
+            LoginScreen(
+                viewModel = loginViewModel,
+                onLoginCorrecto = { navController.navigate("ver_incidencias") }
+            )
+        }
+        composable("ver_incidencias") {
+            VerIncidencias(
+                onRegistrar = { navController.navigate("registrar") },
+                onCerrarSesion = {
+                    navController.navigate("login") {
+                        popUpTo("login") { inclusive = true }
+                    }
                 }
             )
         }
-
-        composable(Screen.VerIncidencias.route) {
-            VerIncidenciasScreen(
-                viewModel = viewModel,
-                onNavigateToRegistro = {
-                    navController.navigate(Screen.RegistroIncidencia.route)
-                }
+        composable("registrar") {
+            RegistrarIncidenciaScreen(
+                viewModel = registrarViewModel,
+                onRegistrada = { navController.navigate("ver_incidencias") }
             )
         }
     }

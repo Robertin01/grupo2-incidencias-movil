@@ -23,4 +23,3 @@ abstract class IncidenciaDatabase : RoomDatabase() {
             }
     }
 }
-
